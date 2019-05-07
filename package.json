@@ -3,7 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "apollo-boost": "^0.3.1",
+    "apollo-link-context": "^1.0.17",
+    "cross-fetch": "^3.0.2",
+    "dotenv": "^8.0.0",
+    "graphql": "^14.2.1",
     "react": "^16.8.6",
+    "react-apollo": "^2.5.5",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.0"
   },
@@ -27,5 +33,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "https://api.github.com/"
 }
