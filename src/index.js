@@ -12,7 +12,7 @@ console.log('token: ', token);
 
 const client = new ApolloClient({
   // uri: "https://48p1r2roz4.sse.codesandbox.io",
-  uri: "https://api.github.com/graphql/v4",
+  uri: "https://api.github.com/graphql",
   // uri: "/graphql/v4/",
   request: async operation => {
     // const token = localStorage.getItem('token');
