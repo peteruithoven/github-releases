@@ -7,7 +7,7 @@ const setContext = require('apollo-link-context').setContext;
 require('dotenv').config();
 
 const httpLink = createHttpLink({
-    uri: "https://api.github.com/graphql/v4",
+    uri: "https://api.github.com/graphql",
     fetch: fetch
 });
 
