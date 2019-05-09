@@ -1,42 +1,18 @@
-const gql = require('graphql-tag');
-const ApolloClient = require('apollo-boost').ApolloClient;
-const fetch = require('cross-fetch/polyfill').fetch;
-const createHttpLink = require('apollo-link-http').createHttpLink;
-const InMemoryCache = require('apollo-cache-inmemory').InMemoryCache;
-const setContext = require('apollo-link-context').setContext;
-require('dotenv').config();
+// const fetch = require('node-fetch');
+const express = require('express');
+const path = require('path');
 
-const httpLink = createHttpLink({
-    uri: "https://api.github.com/graphql",
-    fetch: fetch
+const app = express();
+
+const rootFolder = path.join(__dirname, '..', 'build');
+app.use(express.static(rootFolder));
+
+// Have all other routes return regular front end
+const indexPath = path.join(rootFolder, 'index.html');
+app.get('/*', (req, res) => {
+  res.sendFile(indexPath);
 });
 
-const token = process.env.REACT_APP_GITHUB_TOKEN;
-console.log('token: ', token);
-
-const authLink = setContext((_, { headers }) => {
-    return {
-        headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : "",
-        }
-    }
+const listener = app.listen(process.env.PORT || 3000, () => {
+  console.log('Server listening on ', listener.address().port);
 });
-
-const client = new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache()
-});
-
-client
-  .query({
-    query: gql`
-      query {
-        viewer {
-          login
-        }
-      }
-    `
-  })
-  .then(result => console.log(result))
-  .catch(error => console.log(error));
