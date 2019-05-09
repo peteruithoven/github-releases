@@ -1,19 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "react-apollo";
+import 'typeface-roboto';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-
-import ApolloClient, { gql } from "apollo-boost";
-import { ApolloProvider } from "react-apollo";
+import theme from './theme.js';
 
 const token = process.env.REACT_APP_GITHUB_TOKEN;
 console.log('token: ', token);
 
 const client = new ApolloClient({
-  // uri: "https://48p1r2roz4.sse.codesandbox.io",
   uri: "https://api.github.com/graphql",
-  // uri: "/graphql/v4/",
   request: async operation => {
     // const token = localStorage.getItem('token');
     operation.setContext({
@@ -24,22 +24,14 @@ const client = new ApolloClient({
    }
 });
 
-
-client
-  .query({
-    query: gql`
-      query {
-        viewer {
-          login
-        }
-      }
-    `
-  })
-  .then(result => console.log(result));
-
 ReactDOM.render((
   <ApolloProvider client={client}>
-    <App />
+    <MuiThemeProvider theme={theme}>
+    <>
+      <CssBaseline />
+      <App />
+    </>
+    </MuiThemeProvider>
   </ApolloProvider>)
 , document.getElementById('root'));
 
