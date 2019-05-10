@@ -1,3 +1,3 @@
 export function readPaginated(raw) {
-    return raw.edges.map(edge => edge.node);
+    return raw.edges.filter(edge => !!edge).map(edge => edge.node);
 }

@@ -8,14 +8,13 @@ import 'typeface-roboto';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import theme from './theme.js';
-
-const token = process.env.REACT_APP_GITHUB_TOKEN;
-console.log('token: ', token);
+import * as storage from "./storage.js";
 
 const client = new ApolloClient({
   uri: "https://api.github.com/graphql",
   request: async operation => {
-    // const token = localStorage.getItem('token');
+    const token = storage.read("access_token");
+    console.log('token: ', token);
     operation.setContext({
       headers: {
         authorization: token ? `Bearer ${token}` : ''

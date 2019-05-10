@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Query } from "react-apollo";
 import dayjs from "dayjs";
 import isBetween from 'dayjs/plugin/isBetween'
@@ -6,8 +6,15 @@ import query from "./query.js";
 import Header from "./Header.js";
 import Repository from "./Repository.js";
 import { readPaginated } from "./utils.js";
+import * as storage from "./storage.js";
 
 dayjs.extend(isBetween)
+
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+
+console.log('CLIENT_ID: ', CLIENT_ID);
+console.log('REDIRECT_URI: ', REDIRECT_URI);
 
 const NUM_MONTHS = 12;
 const now = dayjs();
@@ -52,12 +59,38 @@ function getRepos (data, month) {
     .filter(repository => repository.releases.length > 0);
 }
 
+async function getToken(code) {
+  const rawResponse = await fetch('/get_token', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ code })
+  });
+  const response = await rawResponse.json();
+  console.log('response: ', response);
+  const { access_token} = response;
+  if (access_token) {
+    storage.write("access_token", access_token);
+    window.location.replace("/");
+  }
+}
+
 const App = () => {
   const [month, setMonth] = useState(months[0]);
+  useEffect(() => {
+    // retrieve github oauth code
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    // use code to request token
+    if(code) getToken(code);
+  });
 
   return (
     <Query
       query={query}
+      // skip={true}
     >
       {({ loading, error, data }) => {
         if (loading) return <p>Loading...</p>;
