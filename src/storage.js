@@ -1,4 +1,4 @@
-const PREFIX = "github-releases";
+const PREFIX = "github_releases_";
 
 export function read(id) {
     try {

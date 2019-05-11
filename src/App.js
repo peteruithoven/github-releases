@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Query } from "react-apollo";
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import dayjs from "dayjs";
-import isBetween from 'dayjs/plugin/isBetween'
-import query from "./query.js";
+import qs from 'qs';
 import Header from "./Header.js";
-import Repository from "./Repository.js";
-import { readPaginated } from "./utils.js";
 import * as storage from "./storage.js";
+import Repositories from "./Repositories.js";
+import MonthsSelector from './MonthsSelector.js';
 
-dayjs.extend(isBetween)
-
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
-
-console.log('CLIENT_ID: ', CLIENT_ID);
-console.log('REDIRECT_URI: ', REDIRECT_URI);
+const { REACT_APP_CLIENT_ID, REACT_APP_REDIRECT_URI } = process.env;
+const queryString = qs.stringify({
+    client_id: REACT_APP_CLIENT_ID,
+    scope: 'user',
+    redirect_uri: REACT_APP_REDIRECT_URI
+});
+const loginURL = `https://github.com/login/oauth/authorize?${queryString}`
 
 const NUM_MONTHS = 12;
 const now = dayjs();
@@ -24,42 +24,7 @@ for (let i=0;i<NUM_MONTHS;i++) {
   months.push(month.toISOString());
 }
 
-function getRepos (data, month) {
-  console.log('data: ', data);
-  if (!data) {
-    return [];
-  }
-  const startRange = dayjs(month);
-  const endRange = startRange.endOf('month');
-  return readPaginated(data.organization.repositories)
-    .map(repository => {
-
-      const releases = readPaginated(repository.releases);
-
-      const earlierReleases = releases.filter(
-        release => dayjs(release.createdAt).isBefore(startRange)
-      );
-      const withinReleases = releases.filter(
-        release => dayjs(release.createdAt).isBetween(startRange, endRange)
-      );
-      const startRelease = earlierReleases[earlierReleases.length-1];
-      const endRelease = withinReleases[withinReleases.length-1];
-
-      let compareURL = '';
-      if (startRelease && endRelease) {
-        compareURL = `${repository.url}/compare/${startRelease.tagName}...${endRelease.tagName}`
-      }
-
-      return ({
-        ...repository,
-        releases: withinReleases,
-        compareURL
-      })
-    })
-    .filter(repository => repository.releases.length > 0);
-}
-
-async function getToken(code) {
+async function getToken(code, setToken) {
   const rawResponse = await fetch('/get_token', {
     method: 'POST',
     headers: {
@@ -70,42 +35,48 @@ async function getToken(code) {
   });
   const response = await rawResponse.json();
   console.log('response: ', response);
-  const { access_token} = response;
-  if (access_token) {
-    storage.write("access_token", access_token);
-    window.location.replace("/");
-  }
+  return response.access_token;
 }
 
 const App = () => {
   const [month, setMonth] = useState(months[0]);
+  const [token, setToken] = useState(storage.read("access_token"));
+  const loggedIn = !!token;
+
   useEffect(() => {
-    // retrieve github oauth code
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    // use code to request token
-    if(code) getToken(code);
+    (async function() {
+      if (!token) {
+        // retrieve github oauth code
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+          // use code to request token
+          const access_token = await getToken(code, setToken);
+          if (access_token) {
+            storage.write("access_token", access_token);
+            setToken(access_token);
+            window.location.replace("/");
+          }
+        }
+      }
+    })();
   });
 
   return (
-    <Query
-      query={query}
-      // skip={true}
-    >
-      {({ loading, error, data }) => {
-        if (loading) return <p>Loading...</p>;
-        if (error) return <p>Error :(</p>;
-        const repositories = getRepos(data, month);
-        return (
-          <div className="App">
-            <Header month={month} months={months} onChange={setMonth} />
-            {repositories.map(repository => (
-              <Repository data={repository} key={repository.id} />
-            ))}
-          </div>
-        );
-      }}
-    </Query>
+    <div className="App">
+      <Header>
+        {loggedIn? (
+            <MonthsSelector month={month} months={months} onChange={setMonth} />
+        ) : (
+          <Button color="inherit" href={loginURL}>Login</Button>
+        )}
+      </Header>
+      {loggedIn? (
+        <Repositories month={month} />
+      ) : (
+        <Typography>Please login to Github to retrieve release information</Typography>
+      )}
+    </div>
   )
 };
 
