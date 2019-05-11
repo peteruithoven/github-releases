@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import dayjs from "dayjs";
 import qs from 'qs';
 import Header from "./Header.js";
-import * as storage from "./storage.js";
+import * as storage from "../storage.js";
 import Repositories from "./Repositories.js";
 import MonthsSelector from './MonthsSelector.js';
 

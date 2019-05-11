@@ -2,9 +2,9 @@ import React from 'react';
 import { Query } from "react-apollo";
 import dayjs from "dayjs";
 import isBetween from 'dayjs/plugin/isBetween'
-import query from "./query.js";
+import query from "../query.js";
 import Repository from "./Repository.js";
-import { readPaginated } from "./utils.js";
+import { readPaginated } from "../utils.js";
 
 dayjs.extend(isBetween)
 

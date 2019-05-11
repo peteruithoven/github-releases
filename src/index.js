@@ -5,7 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import 'typeface-roboto';
-import App from './App';
+import App from './components/App.js';
 import * as serviceWorker from './serviceWorker';
 import theme from './theme.js';
 import * as storage from "./storage.js";
