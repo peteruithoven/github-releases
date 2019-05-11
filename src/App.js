@@ -43,6 +43,11 @@ const App = () => {
   const [token, setToken] = useState(storage.read("access_token"));
   const loggedIn = !!token;
 
+  function logout() {
+    storage.remove("access_token");
+    setToken(null);
+  }
+
   useEffect(() => {
     (async function() {
       if (!token) {
@@ -66,7 +71,10 @@ const App = () => {
     <div className="App">
       <Header>
         {loggedIn? (
-            <MonthsSelector month={month} months={months} onChange={setMonth} />
+            <>
+              <MonthsSelector month={month} months={months} onChange={setMonth} />
+              <Button color="inherit" onClick={logout}>Logout</Button>
+            </>
         ) : (
           <Button color="inherit" href={loginURL}>Login</Button>
         )}

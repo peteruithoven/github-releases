@@ -17,3 +17,11 @@ export function write(id, value) {
     }
     return value;
 }
+
+export function remove(id) {
+    try {
+        localStorage.removeItem(PREFIX+id);
+    } catch (error) {
+        console.error("Removing data from localStorage failed"); // eslint-disable-line no-console
+    }
+}
