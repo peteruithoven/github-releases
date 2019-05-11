@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import dayjs from "dayjs";
 import qs from 'qs';
@@ -7,6 +6,7 @@ import Header from "./Header.js";
 import * as storage from "../storage.js";
 import Repositories from "./Repositories.js";
 import MonthsSelector from './MonthsSelector.js';
+import Message from "./Message.js";
 
 const { REACT_APP_CLIENT_ID, REACT_APP_REDIRECT_URI } = process.env;
 const queryString = qs.stringify({
@@ -68,7 +68,7 @@ const App = () => {
   });
 
   return (
-    <div className="App">
+    <div>
       <Header>
         {loggedIn? (
             <>
@@ -82,7 +82,9 @@ const App = () => {
       {loggedIn? (
         <Repositories month={month} />
       ) : (
-        <Typography>Please login to Github to retrieve release information</Typography>
+        <Message>
+          Please login to Github to retrieve release information.
+        </Message>
       )}
     </div>
   )

@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import isBetween from 'dayjs/plugin/isBetween'
 import query from "../query.js";
 import Repository from "./Repository.js";
+import Message from "./Message.js";
 import { readPaginated } from "../utils.js";
 
 dayjs.extend(isBetween)
@@ -45,13 +46,10 @@ function getRepos (data, month) {
 
 const Repositories = ({ month }) => {
   return (
-    <Query
-        query={query}
-        // skip={true}
-    >
+    <Query query={query}>
     {({ loading, error, data }) => {
-        if (loading) return <p>Loading...</p>;
-        if (error) return <p>Error</p>;
+        if (loading) return <Message>Loading...</Message>;
+        if (error) return <Message>{error.message}</Message>;
         const repositories = getRepos(data, month);
         return (
         <>

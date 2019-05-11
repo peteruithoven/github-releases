@@ -4,8 +4,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import Markdown from "./Markdown.js";
 import { withStyles } from '@material-ui/core/styles';
+import Markdown from "./Markdown.js";
 
 const styles = theme => ({
     quote: {
