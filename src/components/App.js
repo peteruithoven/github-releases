@@ -60,7 +60,6 @@ const App = () => {
           if (access_token) {
             storage.write("access_token", access_token);
             setToken(access_token);
-            window.location.replace("/");
           }
         }
       }
