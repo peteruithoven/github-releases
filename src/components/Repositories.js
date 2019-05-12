@@ -2,7 +2,7 @@ import React from 'react';
 import { Query } from "react-apollo";
 import dayjs from "dayjs";
 import isBetween from 'dayjs/plugin/isBetween'
-import query from "../query.js";
+import releasesQuery from "../graphql/releases.js";
 import Repository from "./Repository.js";
 import Message from "./Message.js";
 import { readPaginated } from "../utils.js";
@@ -10,7 +10,6 @@ import { readPaginated } from "../utils.js";
 dayjs.extend(isBetween)
 
 function getRepos (data, month) {
-  console.log('data: ', data);
   if (!data) {
     return [];
   }
@@ -44,9 +43,13 @@ function getRepos (data, month) {
     .filter(repository => repository.releases.length > 0);
 }
 
-const Repositories = ({ month }) => {
+const Repositories = ({ month , organization}) => {
   return (
-    <Query query={query}>
+    <Query
+      query={releasesQuery}
+      skip={!organization}
+      variables={{organization }}
+    >
     {({ loading, error, data }) => {
         if (loading) return <Message>Loading...</Message>;
         if (error) return <Message>{error.message}</Message>;

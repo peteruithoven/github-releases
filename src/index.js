@@ -14,7 +14,6 @@ const client = new ApolloClient({
   uri: "https://api.github.com/graphql",
   request: async operation => {
     const token = storage.read("access_token");
-    console.log('token: ', token);
     operation.setContext({
       headers: {
         authorization: token ? `Bearer ${token}` : ''

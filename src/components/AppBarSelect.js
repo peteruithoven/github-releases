@@ -1,5 +1,4 @@
 import React from "react";
-import dayjs from "dayjs";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -29,35 +28,33 @@ const styles = theme => {
     }
 };
 
-const AppBarSelect = ({ id, label, value, options, onChange, classes }) => (
-    <form>
-        <FormControl>
-            <InputLabel
-                shrink
-                htmlFor={id}
-                className={classes.light}
-            >
-                {label}
-            </InputLabel>
-            <Select
-                value={value}
-                onChange={event => onChange(event.target.value)}
-                className={classes.select}
-                inputProps={{
-                    name:{id},
-                    id:{id},
-                    classes: {
-                        icon: classes.icon,
-                    }
-                }}
-            >
-                {options.map(({ value, content }) => (
-                    <MenuItem value={value} key={value}>
-                        { content }
-                    </MenuItem>
-                ))}
-            </Select>
-        </FormControl>
-    </form>
+const AppBarSelect = ({ id, label, value, options, onChange, classes, className }) => (
+    <FormControl className={className}>
+        <InputLabel
+            shrink
+            htmlFor={id}
+            className={classes.light}
+        >
+            {label}
+        </InputLabel>
+        <Select
+            value={value}
+            onChange={event => onChange(event.target.value)}
+            className={classes.select}
+            inputProps={{
+                name: id,
+                id: id,
+                classes: {
+                    icon: classes.icon,
+                }
+            }}
+        >
+            {options.map(({ value, content }) => (
+                <MenuItem value={value} key={value}>
+                    { content }
+                </MenuItem>
+            ))}
+        </Select>
+    </FormControl>
 )
 export default withStyles(styles, { withTheme: true })(AppBarSelect);

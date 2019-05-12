@@ -1,9 +1,9 @@
 import { gql } from "apollo-boost";
 
 const query = gql`
-{
-  organization (login: "elementary") {
-    repositories (first: 100) {
+query Releases ($organization: String!) {
+  organization (login: $organization) {
+    repositories (last: 100) {
       edges {
         node {
           id
