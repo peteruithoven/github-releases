@@ -21,9 +21,11 @@ const Repository = ({ data, classes }) => (
                     {data.name}
                 </Link>
             </Typography>
-            <Link href={data.compareURL}>
-                View all changes
-            </Link>
+            <Typography>
+                <Link href={data.compareURL}>
+                    View all changes
+                </Link>
+            </Typography>
             <List>
                 {data.releases.reverse().map(release => (
                     <Release data={release} key={release.id} />
