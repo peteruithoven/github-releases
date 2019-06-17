@@ -3,8 +3,8 @@ import Button from '@material-ui/core/Button';
 import { Query } from "react-apollo";
 import { withStyles } from '@material-ui/core/styles';
 import dayjs from "dayjs";
-import qs from 'qs';
 import Header from "./Header.js";
+import LoginButton from "./LoginButton.js";
 import * as storage from "../storage.js";
 import Repositories from "./Repositories.js";
 import MonthsSelector from './MonthsSelector.js';
@@ -12,14 +12,6 @@ import AppBarSelect from "./AppBarSelect.js";
 import Message from "./Message.js";
 import organizationsQuery from "../graphql/organizations.js";
 import { readPaginated } from "../utils.js";
-
-const { REACT_APP_CLIENT_ID, REACT_APP_REDIRECT_URI } = process.env;
-const queryString = qs.stringify({
-    client_id: REACT_APP_CLIENT_ID,
-    scope: 'read:user, read:org',
-    redirect_uri: REACT_APP_REDIRECT_URI
-});
-const loginURL = `https://github.com/login/oauth/authorize?${queryString}`
 
 const NUM_MONTHS = 12;
 const now = dayjs();
@@ -133,7 +125,7 @@ const App = ({ classes }) => {
                     <Button color="inherit" onClick={logout}>Logout</Button>
                   </>
               ) : (
-                <Button color="inherit" href={loginURL}>Login</Button>
+                <LoginButton color="inherit" />
               )}
             </Header>
             {loggedIn? (
