@@ -46,6 +46,14 @@ function getOrgs(data) {
   return readPaginated(data.viewer.organizations)
 }
 
+function getPath() {
+  return window.location.pathname.split("/").slice(1);
+}
+
+function setPath(...path) {
+  window.history.pushState({}, path, `/${path.join('/')}`);
+}
+
 const styles = theme => ({
   formItem: {
     marginRight: theme.spacing.unit,
@@ -53,10 +61,17 @@ const styles = theme => ({
   }
 });
 
+
 const App = ({ classes }) => {
-  const [month, setMonth] = useState(months[0]);
+  const [month, setMonth] = useState(getPath()[1]? dayjs(getPath()[1]).toISOString(): months[0]);
   const [token, setToken] = useState(storage.read("access_token"));
-  const [organization, setOrganization] = useState("");
+  const [organization, setOrganization] = useState(getPath()[0]);
+  useEffect(() => {
+      if (organization) setPath(organization, dayjs(month).format('YYYY-MM'));
+    },
+    [organization, month],
+  );
+
   const loggedIn = !!token;
 
   function logout() {
