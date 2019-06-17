@@ -90,7 +90,13 @@ const App = ({ classes }) => {
               )}
             </Header>
             {loggedIn ? (
-              <Repositories organization={organization} month={month} />
+              organization ? (
+                <Repositories organization={organization} month={month} />
+              ) : (
+                <Message>
+                  Please select a organization to retrieve release information.
+                </Message>
+              )
             ) : (
               <Message>
                 Please login to Github to retrieve release information.
