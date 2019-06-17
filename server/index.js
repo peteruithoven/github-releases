@@ -1,13 +1,13 @@
 const fetch = require('node-fetch');
 const express = require('express');
 const path = require('path');
-const qs = require("qs");
+const qs = require('qs');
 require('dotenv').config();
 
 const {
   REACT_APP_CLIENT_ID: CLIENT_ID,
   REACT_APP_REDIRECT_URI: REDIRECT_URI,
-  CLIENT_SECRET
+  CLIENT_SECRET,
 } = process.env;
 console.log('CLIENT_ID: ', CLIENT_ID);
 console.log('REDIRECT_URI: ', REDIRECT_URI);
@@ -25,7 +25,7 @@ app.post('/get_token', async (req, res) => {
     client_id: CLIENT_ID,
     redirect_uri: REDIRECT_URI,
     client_secret: CLIENT_SECRET,
-    code
+    code,
   });
 
   const rawResponse = await fetch(
@@ -33,16 +33,16 @@ app.post('/get_token', async (req, res) => {
     {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-      }
+        Accept: 'application/json',
+      },
     }
   );
   const response = await rawResponse.json();
   if (response.error) {
-    console.warning("Could not get token: ", response);
+    console.warning('Could not get token: ', response);
   }
   res.json(response);
-})
+});
 
 // Have all other routes return regular front end
 const indexPath = path.join(rootFolder, 'index.html');
@@ -53,6 +53,3 @@ app.get('/*', (req, res) => {
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Server listening on ', listener.address().port);
 });
-
-
-
