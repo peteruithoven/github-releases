@@ -5,13 +5,13 @@ import { withStyles } from '@material-ui/core/styles';
 import dayjs from "dayjs";
 import Header from "./Header.js";
 import LoginButton from "./LoginButton.js";
-import * as storage from "../storage.js";
 import Repositories from "./Repositories.js";
 import MonthsSelector from './MonthsSelector.js';
 import AppBarSelect from "./AppBarSelect.js";
 import Message from "./Message.js";
 import organizationsQuery from "../graphql/organizations.js";
 import { readPaginated } from "../utils.js";
+import useGithubToken from "../hooks/useGithubToken.js";
 
 const NUM_MONTHS = 12;
 const now = dayjs();
@@ -19,19 +19,6 @@ const months = [];
 for (let i=0;i<NUM_MONTHS;i++) {
   const month = now.subtract(i, 'month').startOf('month');
   months.push(month.toISOString());
-}
-
-async function getToken(code, setToken) {
-  const rawResponse = await fetch('/get_token', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ code })
-  });
-  const response = await rawResponse.json();
-  return response.access_token;
 }
 
 function getOrgs(data) {
@@ -56,7 +43,7 @@ const styles = theme => ({
 
 const App = ({ classes }) => {
   const [month, setMonth] = useState(getPath()[1]? dayjs(getPath()[1]).toISOString(): months[0]);
-  const [token, setToken] = useState(storage.read("access_token"));
+  const [token, logout] = useGithubToken();
   const [organization, setOrganization] = useState(getPath()[0]);
   useEffect(() => {
       if (organization) setPath(organization, dayjs(month).format('YYYY-MM'));
@@ -65,30 +52,6 @@ const App = ({ classes }) => {
   );
 
   const loggedIn = !!token;
-
-  function logout() {
-    storage.remove("access_token");
-    setToken(null);
-  }
-
-  useEffect(() => {
-    (async function() {
-      if (!token) {
-        // retrieve github oauth code
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        if (code) {
-          // use code to request token
-          const access_token = await getToken(code, setToken);
-          if (access_token) {
-            storage.write("access_token", access_token);
-            setToken(access_token);
-            window.location.replace("/"); // removing code from url
-          }
-        }
-      }
-    })();
-  });
 
   return (
     <Query

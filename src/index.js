@@ -8,12 +8,12 @@ import 'typeface-roboto';
 import App from './components/App.js';
 import * as serviceWorker from './serviceWorker';
 import theme from './theme.js';
-import * as storage from "./storage.js";
+import { getLocalToken } from './hooks/useGithubToken';
 
 const client = new ApolloClient({
   uri: "https://api.github.com/graphql",
   request: async operation => {
-    const token = storage.read("access_token");
+    const token = getLocalToken();
     operation.setContext({
       headers: {
         authorization: token ? `Bearer ${token}` : ''
