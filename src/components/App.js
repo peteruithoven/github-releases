@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Button from '@material-ui/core/Button';
+import { Button } from '@material-ui/core';
 import { Query } from 'react-apollo';
-import { withStyles } from '@material-ui/core/styles';
 import dayjs from 'dayjs';
 import Header from './Header.js';
 import LoginButton from './LoginButton.js';
@@ -33,14 +32,7 @@ function setPath(...path) {
   window.history.pushState({}, path, `/${path.join('/')}`);
 }
 
-const styles = theme => ({
-  formItem: {
-    marginRight: theme.spacing.unit,
-    minWidth: 150,
-  },
-});
-
-const App = ({ classes }) => {
+const App = () => {
   const [month, setMonth] = useState(
     getPath()[1] ? dayjs(getPath()[1]).toISOString() : months[0]
   );
@@ -72,13 +64,11 @@ const App = ({ classes }) => {
                         content: name,
                       }))}
                       onChange={setOrganization}
-                      className={classes.formItem}
                     />
                     <MonthsSelector
                       month={month}
                       months={months}
                       onChange={setMonth}
-                      className={classes.formItem}
                     />
                   </form>
                   <Button color="inherit" onClick={logout}>
@@ -109,4 +99,4 @@ const App = ({ classes }) => {
   );
 };
 
-export default withStyles(styles, { withTheme: true })(App);
+export default App;

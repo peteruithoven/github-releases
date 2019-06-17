@@ -1,25 +1,14 @@
 import React from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { Box, Card, CardContent, Typography } from '@material-ui/core';
 
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    padding: theme.spacing.unit * 2,
-  },
-});
-
-const Message = ({ children, classes }) => (
-  <div className={classes.container}>
+const Message = ({ children }) => (
+  <Box display="flex" justifyContent="center" p={[2, 3]}>
     <Card>
       <CardContent>
         <Typography>{children}</Typography>
       </CardContent>
     </Card>
-  </div>
+  </Box>
 );
 
-export default withStyles(styles, { withTheme: true })(Message);
+export default Message;

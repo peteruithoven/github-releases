@@ -1,24 +1,15 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
+import { AppBar, Toolbar, Typography, Box } from '@material-ui/core';
 
-const styles = {
-  grow: {
-    flexGrow: 1,
-  },
-};
-
-const Header = ({ loggedIn, month, months, onChange, classes, children }) => (
+const Header = ({ children }) => (
   <AppBar position="static">
     <Toolbar>
-      <Typography variant="h6" color="inherit" className={classes.grow}>
-        Release viewer
-      </Typography>
+      <Box flexGrow={1}>
+        <Typography variant="h6">Release viewer</Typography>
+      </Box>
       {children}
     </Toolbar>
   </AppBar>
 );
 
-export default withStyles(styles)(Header);
+export default Header;

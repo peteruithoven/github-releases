@@ -1,55 +1,40 @@
 import React from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
+import { MenuItem, Select, InputLabel, FormControl } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => {
   const { palette } = theme;
-  const selectColor = palette.getContrastText(palette.text.primary);
-  const selectColorValue = `${selectColor} !important`;
+  const selectColor = palette.getContrastText(palette.primary.main);
   return {
+    formControl: {
+      minWidth: 150,
+      marginRight: theme.spacing(2),
+    },
+    colorInherit: {
+      color: 'inherit !important',
+    },
     select: {
-      color: selectColorValue,
-      '&:before': {
-        borderColor: selectColorValue,
+      '&:before, &:after': {
+        borderColor: `${selectColor} !important`,
       },
-      '&:after': {
-        borderColor: selectColorValue,
-      },
-    },
-    icon: {
-      fill: selectColorValue,
-    },
-    light: {
-      color: selectColorValue,
     },
   };
 };
 
-const AppBarSelect = ({
-  id,
-  label,
-  value,
-  options,
-  onChange,
-  classes,
-  className,
-}) => (
-  <FormControl className={className}>
-    <InputLabel shrink htmlFor={id} className={classes.light}>
+const AppBarSelect = ({ id, label, value, options, onChange, classes }) => (
+  <FormControl className={classes.formControl}>
+    <InputLabel shrink htmlFor={id} className={classes.colorInherit}>
       {label}
     </InputLabel>
     <Select
       value={value}
       onChange={event => onChange(event.target.value)}
-      className={classes.select}
+      className={[classes.select, classes.colorInherit].join(' ')}
       inputProps={{
         name: id,
         id: id,
         classes: {
-          icon: classes.icon,
+          icon: classes.colorInherit,
         },
       }}
     >
