@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const express = require('express');
+const compression = require('compression');
 const path = require('path');
 const qs = require('qs');
 require('dotenv').config();
@@ -15,9 +16,6 @@ console.log('CLIENT_SECRET: ', CLIENT_SECRET);
 
 const app = express();
 app.use(express.json());
-
-const rootFolder = path.join(__dirname, '..', 'build');
-app.use(express.static(rootFolder));
 
 app.post('/get_token', async (req, res) => {
   const { code } = req.body;
@@ -43,6 +41,10 @@ app.post('/get_token', async (req, res) => {
   }
   res.json(response);
 });
+
+const rootFolder = path.join(__dirname, '..', 'build');
+app.use(compression());
+app.use(express.static(rootFolder));
 
 // Have all other routes return regular front end
 const indexPath = path.join(rootFolder, 'index.html');
