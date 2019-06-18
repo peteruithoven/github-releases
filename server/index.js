@@ -52,6 +52,6 @@ app.get('/*', (req, res) => {
   res.sendFile(indexPath);
 });
 
-const listener = app.listen(process.env.PORT || 3000, () => {
+const listener = app.listen(process.env.PORT || 4000, () => {
   console.log('Server listening on ', listener.address().port);
 });
