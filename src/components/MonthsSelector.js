@@ -1,6 +1,10 @@
 import React from 'react';
-import dayjs from 'dayjs';
 import AppBarSelect from './AppBarSelect.js';
+
+const dateTimeFormat = new Intl.DateTimeFormat('default', {
+  year: 'numeric',
+  month: 'short',
+});
 
 const MonthsSelector = ({ month, months, onChange }) => (
   <AppBarSelect
@@ -9,7 +13,7 @@ const MonthsSelector = ({ month, months, onChange }) => (
     value={month}
     options={months.map(month => ({
       value: month,
-      content: dayjs(month).format('MMM YYYY'),
+      content: dateTimeFormat.format(new Date(month)),
     }))}
     onChange={onChange}
   />

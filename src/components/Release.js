@@ -1,5 +1,4 @@
 import React from 'react';
-import dayjs from 'dayjs';
 import {
   ListItem,
   ListItemText,
@@ -9,6 +8,12 @@ import {
 } from '@material-ui/core';
 import Markdown from './Markdown.js';
 
+const dateTimeFormat = new Intl.DateTimeFormat('default', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+
 const Release = ({ data }) => (
   <ListItem>
     <ListItemText>
@@ -17,7 +22,7 @@ const Release = ({ data }) => (
           <Link href={data.url}>{data.name}</Link>
         </Typography>
         <Typography gutterBottom>
-          {dayjs(data.createdAt).format('YYYY-MM-DD')}
+          {dateTimeFormat.format(new Date(data.createdAt))}
         </Typography>
         <Box pl={1} borderLeft={4} borderColor="#e0e0e0">
           <Markdown source={data.description} />
