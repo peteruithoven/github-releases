@@ -13,6 +13,8 @@ const renderers = {
   ),
 };
 
-const Markdown = props => <ReactMarkdown {...props} renderers={renderers} />;
+const Markdown = props => (
+  <ReactMarkdown {...props} renderers={renderers} escapeHtml={false} />
+);
 
 export default Markdown;
