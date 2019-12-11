@@ -5,7 +5,6 @@ import isBetween from 'dayjs/plugin/isBetween';
 import releasesQuery from '../graphql/releases.js';
 import Repository from './Repository.js';
 import Message from './Message.js';
-import { readPaginated } from '../utils.js';
 
 dayjs.extend(isBetween);
 
@@ -15,9 +14,9 @@ function getRepos(data, month) {
   }
   const startRange = dayjs(month);
   const endRange = startRange.endOf('month');
-  return readPaginated(data.organization.repositories)
+  return data.organization.repositories.nodes
     .map(repository => {
-      const releases = readPaginated(repository.releases);
+      const releases = repository.releases.nodes;
 
       const earlierReleases = releases.filter(release =>
         dayjs(release.createdAt).isBefore(startRange)
@@ -30,9 +29,7 @@ function getRepos(data, month) {
 
       let compareURL = '';
       if (startRelease && endRelease) {
-        compareURL = `${repository.url}/compare/${startRelease.tagName}...${
-          endRelease.tagName
-        }`;
+        compareURL = `${repository.url}/compare/${startRelease.tagName}...${endRelease.tagName}`;
       }
 
       return {

@@ -4,11 +4,9 @@ const query = gql`
   {
     viewer {
       organizations(last: 100) {
-        edges {
-          node {
-            id
-            name
-          }
+        nodes {
+          id
+          name
         }
       }
     }

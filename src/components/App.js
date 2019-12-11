@@ -9,7 +9,6 @@ import MonthsSelector from './MonthsSelector.js';
 import AppBarSelect from './AppBarSelect.js';
 import Message from './Message.js';
 import organizationsQuery from '../graphql/organizations.js';
-import { readPaginated } from '../utils.js';
 import useGithubToken from '../hooks/useGithubToken.js';
 
 const NUM_MONTHS = 12;
@@ -21,7 +20,7 @@ for (let i = 0; i < NUM_MONTHS; i++) {
 }
 
 function getOrgs(data) {
-  return readPaginated(data.viewer.organizations);
+  return data.viewer.organizations.nodes;
 }
 
 function getPath() {
