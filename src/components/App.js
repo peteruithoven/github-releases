@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@material-ui/core';
-import { Query } from 'react-apollo';
 import dayjs from 'dayjs';
 import Header from './Header.js';
 import LoginButton from './LoginButton.js';
 import Repositories from './Repositories.js';
 import MonthsSelector from './MonthsSelector.js';
-import AppBarSelect from './AppBarSelect.js';
+import OrgSelector from './OrgSelector.js';
 import Message from './Message.js';
-import organizationsQuery from '../graphql/organizations.js';
 import useGithubToken from '../hooks/useGithubToken.js';
 
 const NUM_MONTHS = 12;
@@ -17,10 +15,6 @@ const months = [];
 for (let i = 0; i < NUM_MONTHS; i++) {
   const month = now.subtract(i, 'month').startOf('month');
   months.push(month.toISOString());
-}
-
-function getOrgs(data) {
-  return data.viewer.organizations.nodes;
 }
 
 function getPath() {
@@ -44,17 +38,13 @@ const App = () => {
   const loggedIn = !!token;
 
   return (
-    <Query query={organizationsQuery} skip={!loggedIn}>
-      {({ loading, error, data }) => {
-        let organizations = [];
-        if (!loading && !error && data) organizations = getOrgs(data);
-        return (
+    <>
+      <Header>
+        {loggedIn ? (
           <>
-            <Header>
-              {loggedIn ? (
-                <>
-                  <form>
-                    <AppBarSelect
+            <form>
+              <OrgSelector skip={!loggedIn} onChange={setOrganization} />
+              {/* <AppBarSelect
                       id="organization"
                       label="Organization"
                       value={organization}
@@ -63,38 +53,35 @@ const App = () => {
                         content: name,
                       }))}
                       onChange={setOrganization}
-                    />
-                    <MonthsSelector
-                      month={month}
-                      months={months}
-                      onChange={setMonth}
-                    />
-                  </form>
-                  <Button color="inherit" onClick={logout}>
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <LoginButton color="inherit" />
-              )}
-            </Header>
-            {loggedIn ? (
-              organization ? (
-                <Repositories organization={organization} month={month} />
-              ) : (
-                <Message>
-                  Please select a organization to retrieve release information.
-                </Message>
-              )
-            ) : (
-              <Message>
-                Please login to Github to retrieve release information.
-              </Message>
-            )}
+                    /> */}
+              <MonthsSelector
+                month={month}
+                months={months}
+                onChange={setMonth}
+              />
+            </form>
+            <Button color="inherit" onClick={logout}>
+              Logout
+            </Button>
           </>
-        );
-      }}
-    </Query>
+        ) : (
+          <LoginButton color="inherit" />
+        )}
+      </Header>
+      {loggedIn ? (
+        organization ? (
+          <Repositories organization={organization} month={month} />
+        ) : (
+          <Message>
+            Please select a organization to retrieve release information.
+          </Message>
+        )
+      ) : (
+        <Message>
+          Please login to Github to retrieve release information.
+        </Message>
+      )}
+    </>
   );
 };
 
