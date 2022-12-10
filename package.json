@@ -10,7 +10,7 @@
     "cross-fetch": "^3.0.4",
     "dayjs": "^1.8.17",
     "dotenv": "^8.2.0",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "graphql": "^14.5.8",
     "npm-run-all": "^4.1.5",
     "react": "^16.12.0",
